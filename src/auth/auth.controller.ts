@@ -1,4 +1,4 @@
-import { Controller } from '@nestjs/common'
+import { CACHE_MANAGER, Controller, Inject } from '@nestjs/common'
 import { GrpcMethod } from '@nestjs/microservices'
 import {
   ValidateAccessTokenReq,
@@ -7,16 +7,30 @@ import {
   GetAccessTokenReq,
 } from './auth.interface'
 import * as jwt from 'jsonwebtoken'
+import { Cache } from 'cache-manager'
 
 @Controller('auth')
 export class AuthController {
+  constructor(@Inject(CACHE_MANAGER) private cacheManager: Cache) {}
   @GrpcMethod('Auth')
-  getAccessToken(req: GetAccessTokenReq): string {
-    let payload = {
-      uid: req.uid,
+  async getAccessToken(req: GetAccessTokenReq): Promise<string> {
+    let token: string
+
+    token = (await this.cacheManager.get(`${req.uid}`)) as string
+
+    if (!token) {
+      let payload = {
+        uid: req.uid,
+      }
+
+      token = jwt.sign(payload, process.env.ACCESS_JWT_SECRET, {
+        expiresIn: '1h',
+      })
+
+      await this.cacheManager.set(`${req.uid}`, token, { ttl: 60 * 60 })
     }
 
-    return jwt.sign(payload, process.env.ACCESS_JWT_SECRET, { expiresIn: '1h' })
+    return token
   }
 
   @GrpcMethod('Auth')
