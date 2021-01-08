@@ -29,7 +29,7 @@ describe('AuthController', () => {
     expect(controller).toBeDefined()
   })
 
-  describe('AccessToken', () => {
+  describe('GetAccessToken', () => {
     it('should return access token', async () => {
       let req: GetAccessTokenReq = {
         uid: 1,
@@ -57,6 +57,14 @@ describe('AuthController', () => {
       let cachedToken = await controller.getAccessToken(req)
 
       expect(accessToken).toEqual(cachedToken)
+    })
+  })
+
+  describe('ValidateAccessToken', () => {
+    it('should return status AUTHENTICATED', async () => {
+      const token = await controller.getAccessToken({ uid: 1 })
+      const result = controller.validateAccessToken({ token: token })
+      expect(result.status).toEqual('AUTHENTICATED')
     })
   })
 })
