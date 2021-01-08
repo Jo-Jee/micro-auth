@@ -36,5 +36,19 @@ describe('AuthController', () => {
 
       expect(payload.uid).toEqual(req.uid)
     })
+
+    it('should return redis cached token', async () => {
+      let req: GetAccessTokenReq = {
+        uid: 1,
+      }
+
+      let accessToken = controller.getAccessToken(req)
+
+      await new Promise((resolve) => setTimeout(resolve, 1000))
+
+      let cachedToken = controller.getAccessToken(req)
+
+      expect(accessToken).toEqual(cachedToken)
+    })
   })
 })
