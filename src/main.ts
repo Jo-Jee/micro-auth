@@ -9,12 +9,9 @@ async function bootstrap() {
     {
       transport: Transport.GRPC,
       options: {
-        package: process.env.PACKAGE_NAME,
-        protoPath: join(
-          __dirname,
-          `${process.env.PACKAGE_NAME}/${process.env.PACKAGE_NAME}.proto`,
-        ),
-        url: `0.0.0.0:${process.env.PORT}`,
+        package: 'auth',
+        protoPath: join(__dirname, 'auth/auth.proto'),
+        url: `0.0.0.0:4000`,
       },
     },
   )
