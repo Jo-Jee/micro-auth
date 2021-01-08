@@ -66,5 +66,13 @@ describe('AuthController', () => {
       const result = controller.validateAccessToken({ token: token })
       expect(result.status).toEqual('AUTHENTICATED')
     })
+
+    it('should return status EXPIRED when token expired', () => {
+      const token =
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsImlhdCI6MTYxMDExNTY2NSwiZXhwIjoxNjEwMTE1NjY2fQ.bVCfZjLjNA9dF7OCHxZk8RgaZj9qgZ07AYGBICMiQcU'
+
+      const result = controller.validateAccessToken({ token: token })
+      expect(result.status).toEqual('EXPIRED')
+    })
   })
 })

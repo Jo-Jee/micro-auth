@@ -46,6 +46,10 @@ export class AuthController {
         uid: payload.uid,
       }
     } catch (e) {
+      if (e instanceof jwt.TokenExpiredError)
+        return {
+          status: 'EXPIRED',
+        }
       return {
         status: 'UNAUTHENTICATED',
       }
