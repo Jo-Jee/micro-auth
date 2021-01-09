@@ -76,7 +76,7 @@ describe('AuthController', () => {
       expect(result.status).toEqual(AuthStatus.EXPIRED)
     })
 
-    it('should return status UNAUTHENTICATED when jwt key is wrong', () => {
+    it('should return status UNAUTHENTICATED when jwt secret key is wrong', () => {
       const token =
         'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsImlhdCI6MTYxMDExNTY2NSwiZXhwIjoxNjEwMTE1NjY2fQ.f7qFuvioPg6Yx-ZWj_f6BJ5ZjmTOojzkdQsm3P7zF1A'
 
