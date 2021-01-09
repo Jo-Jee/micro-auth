@@ -8,6 +8,7 @@ import {
 } from './auth.interface'
 import * as jwt from 'jsonwebtoken'
 import { Cache } from 'cache-manager'
+import { AuthStatus } from './enums/auth.enum'
 
 @Controller('auth')
 export class AuthController {
@@ -42,16 +43,16 @@ export class AuthController {
       ) as Payload
 
       return {
-        status: 'AUTHENTICATED',
+        status: AuthStatus.AUTHENTICATED,
         uid: payload.uid,
       }
     } catch (e) {
       if (e instanceof jwt.TokenExpiredError)
         return {
-          status: 'EXPIRED',
+          status: AuthStatus.EXPIRED,
         }
       return {
-        status: 'UNAUTHENTICATED',
+        status: AuthStatus.UNAUTHENTICATED,
       }
     }
   }

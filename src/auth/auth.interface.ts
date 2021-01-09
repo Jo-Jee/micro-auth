@@ -1,9 +1,11 @@
+import { AuthStatus } from './enums/auth.enum'
+
 export interface ValidateAccessTokenReq {
   token: string
 }
 
 export interface ValidateAccessTokenRes {
-  status: string
+  status: AuthStatus
   uid?: number
 }
 
