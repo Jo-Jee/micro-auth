@@ -5,6 +5,7 @@ import { GetAccessTokenReq, Payload } from './auth.interface'
 import { ConfigModule } from '@nestjs/config'
 import { CacheModule } from '@nestjs/common'
 import * as redisStore from 'cache-manager-redis-store'
+import { AuthStatus } from './enums/auth.enum'
 
 describe('AuthController', () => {
   let controller: AuthController
@@ -64,7 +65,7 @@ describe('AuthController', () => {
     it('should return status AUTHENTICATED', async () => {
       const token = await controller.getAccessToken({ uid: 1 })
       const result = controller.validateAccessToken({ token: token })
-      expect(result.status).toEqual('AUTHENTICATED')
+      expect(result.status).toEqual(AuthStatus.AUTHENTICATED)
     })
 
     it('should return status EXPIRED when token expired', () => {
@@ -72,7 +73,7 @@ describe('AuthController', () => {
         'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsImlhdCI6MTYxMDExNTY2NSwiZXhwIjoxNjEwMTE1NjY2fQ.bVCfZjLjNA9dF7OCHxZk8RgaZj9qgZ07AYGBICMiQcU'
 
       const result = controller.validateAccessToken({ token: token })
-      expect(result.status).toEqual('EXPIRED')
+      expect(result.status).toEqual(AuthStatus.EXPIRED)
     })
   })
 })
