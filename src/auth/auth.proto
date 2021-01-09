@@ -2,17 +2,19 @@ syntax = "proto3";
 
 package auth;
 
+enum AuthStatus {
+  AUTHENTICATED = 0;
+  EXPIRED = 1;
+  UNAUTHENTICATED = 2;
+}
+
 message ValidateAccessTokenReq {
   string token = 1;
 }
 
 message ValidateAccessTokenRes {
-  string status = 1;
+  AuthStatus status = 1;
   int32 uid = 2;
-}
-
-message GetAccessTokenReq {
-  int32 uid = 1;
 }
 
 message GetAccessTokenReq {
@@ -24,6 +26,6 @@ message GetAccessTokenRes {
 }
 
 service Auth {
-  rpc GetAccessToken(GetAccessTokenReq) returns (GetAccessTokenRes)
-  rpc ValidateAccessToken(ValidateAccessTokenRequest) returns (ValidateAccessTokenResponse);
+  rpc GetAccessToken(GetAccessTokenReq) returns (GetAccessTokenRes);
+  rpc ValidateAccessToken(ValidateAccessTokenReq) returns (ValidateAccessTokenRes);
 }
