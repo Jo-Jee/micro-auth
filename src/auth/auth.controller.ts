@@ -5,6 +5,7 @@ import {
   ValidateAccessTokenRes,
   Payload,
   GetAccessTokenReq,
+  GetAccessTokenRes,
 } from './auth.interface'
 import * as jwt from 'jsonwebtoken'
 import { Cache } from 'cache-manager'
@@ -14,7 +15,7 @@ import { AuthStatus } from './enums/auth.enum'
 export class AuthController {
   constructor(@Inject(CACHE_MANAGER) private cacheManager: Cache) {}
   @GrpcMethod('Auth')
-  async getAccessToken(req: GetAccessTokenReq): Promise<string> {
+  async getAccessToken(req: GetAccessTokenReq): Promise<GetAccessTokenRes> {
     let token: string
 
     token = (await this.cacheManager.get(`${req.uid}`)) as string
@@ -31,7 +32,9 @@ export class AuthController {
       await this.cacheManager.set(`${req.uid}`, token, { ttl: 60 * 60 })
     }
 
-    return token
+    return {
+      token: token,
+    }
   }
 
   @GrpcMethod('Auth')

@@ -36,10 +36,10 @@ describe('AuthController', () => {
         uid: 1,
       }
 
-      let accessToken = await controller.getAccessToken(req)
+      let res = await controller.getAccessToken(req)
 
       let payload: Payload = jwt.verify(
-        accessToken,
+        res.token,
         process.env.ACCESS_JWT_SECRET,
       ) as Payload
 
@@ -63,8 +63,8 @@ describe('AuthController', () => {
 
   describe('ValidateAccessToken', () => {
     it('should return status AUTHENTICATED', async () => {
-      const token = await controller.getAccessToken({ uid: 1 })
-      const result = controller.validateAccessToken({ token: token })
+      const res = await controller.getAccessToken({ uid: 1 })
+      const result = controller.validateAccessToken({ token: res.token })
       expect(result.status).toEqual(AuthStatus.AUTHENTICATED)
     })
 

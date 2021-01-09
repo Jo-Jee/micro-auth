@@ -16,3 +16,7 @@ export interface Payload {
 export interface GetAccessTokenReq {
   uid: number
 }
+
+export interface GetAccessTokenRes {
+  token: string
+}
