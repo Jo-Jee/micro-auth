@@ -91,4 +91,17 @@ describe('AuthController', () => {
       expect(result.status).toEqual(AuthStatus.UNAUTHENTICATED)
     })
   })
+
+  describe('GetRefreshToken', () => {
+    it('should return refresh token', async () => {
+      let res = await controller.getRefreshToken({ uid: 1 })
+
+      let payload: Payload = jwt.verify(
+        res.token,
+        process.env.REFRESH_JWT_SECRET,
+      ) as Payload
+
+      expect(payload.uid).toEqual(1)
+    })
+  })
 })
