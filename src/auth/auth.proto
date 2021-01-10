@@ -8,11 +8,11 @@ enum AuthStatus {
   UNAUTHENTICATED = 2;
 }
 
-message ValidateAccessTokenReq {
+message ValidateTokenReq {
   string token = 1;
 }
 
-message ValidateAccessTokenRes {
+message ValidateTokenRes {
   AuthStatus status = 1;
   int32 uid = 2;
 }
@@ -21,11 +21,11 @@ message GetAccessTokenReq {
   int32 uid = 1;
 }
 
-message GetAccessTokenRes {
+message GetTokenRes {
   string token = 1;
 }
 
 service Auth {
-  rpc GetAccessToken(GetAccessTokenReq) returns (GetAccessTokenRes);
-  rpc ValidateAccessToken(ValidateAccessTokenReq) returns (ValidateAccessTokenRes);
+  rpc GetAccessToken(GetAccessTokenReq) returns (GetTokenRes);
+  rpc ValidateAccessToken(ValidateTokenReq) returns (ValidateTokenRes);
 }
