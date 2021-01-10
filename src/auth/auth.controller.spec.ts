@@ -83,5 +83,12 @@ describe('AuthController', () => {
       const result = controller.validateAccessToken({ token: token })
       expect(result.status).toEqual(AuthStatus.UNAUTHENTICATED)
     })
+
+    it('should return status UNAUTHENTICATED when token is not jwt', () => {
+      const token = 'asdf1234'
+
+      const result = controller.validateAccessToken({ token: token })
+      expect(result.status).toEqual(AuthStatus.UNAUTHENTICATED)
+    })
   })
 })
