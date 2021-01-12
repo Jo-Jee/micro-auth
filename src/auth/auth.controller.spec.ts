@@ -114,4 +114,35 @@ describe('AuthController', () => {
       expect(accessToken).toEqual(cachedToken)
     })
   })
+
+  describe('ValidateRefreshToken', () => {
+    it('should return status AUTHENTICATED', async () => {
+      const res = await controller.getRefreshToken({ uid: 1 })
+      const result = controller.validateRefreshToken({ token: res.token })
+      expect(result.status).toEqual(AuthStatus.AUTHENTICATED)
+    })
+
+    it('should return status EXPIRED when token expired', () => {
+      const token =
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsImlhdCI6MTYxMDExNTY2NSwiZXhwIjoxNjEwMTE1NjY2fQ.56zKwoltdrRNu7UCbV3fpbH77umxo92wi_-1hvUAa8A'
+
+      const result = controller.validateRefreshToken({ token: token })
+      expect(result.status).toEqual(AuthStatus.EXPIRED)
+    })
+
+    it('should return status UNAUTHENTICATED when jwt secret key is wrong', () => {
+      const token =
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsImlhdCI6MTYxMDExNTY2NSwiZXhwIjoxNjEwMTE1NjY2fQ.f7qFuvioPg6Yx-ZWj_f6BJ5ZjmTOojzkdQsm3P7zF1A'
+
+      const result = controller.validateRefreshToken({ token: token })
+      expect(result.status).toEqual(AuthStatus.UNAUTHENTICATED)
+    })
+
+    it('should return status UNAUTHENTICATED when token is not jwt', () => {
+      const token = 'asdf1234'
+
+      const result = controller.validateRefreshToken({ token: token })
+      expect(result.status).toEqual(AuthStatus.UNAUTHENTICATED)
+    })
+  })
 })
