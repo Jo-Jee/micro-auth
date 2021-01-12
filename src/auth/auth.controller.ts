@@ -18,7 +18,7 @@ export class AuthController {
   async getAccessToken(req: GetAccessTokenReq): Promise<GetTokenRes> {
     let token: string
 
-    token = (await this.cacheManager.get(`${req.uid}`)) as string
+    token = (await this.cacheManager.get(`${req.uid}_Access`)) as string
 
     if (!token) {
       let payload = {
@@ -29,7 +29,7 @@ export class AuthController {
         expiresIn: '1h',
       })
 
-      await this.cacheManager.set(`${req.uid}`, token, { ttl: 60 * 60 })
+      await this.cacheManager.set(`${req.uid}_Access`, token, { ttl: 60 * 60 })
     }
 
     return {
@@ -57,6 +57,29 @@ export class AuthController {
       return {
         status: AuthStatus.UNAUTHENTICATED,
       }
+    }
+  }
+
+  @GrpcMethod('Auth')
+  async getRefreshToken(req: GetAccessTokenReq): Promise<GetTokenRes> {
+    let token: string
+
+    token = (await this.cacheManager.get(`${req.uid}_Refresh`)) as string
+
+    if (!token) {
+      let payload = {
+        uid: req.uid,
+      }
+
+      token = jwt.sign(payload, process.env.REFRESH_JWT_SECRET, {
+        expiresIn: '1h',
+      })
+
+      await this.cacheManager.set(`${req.uid}_Refresh`, token, { ttl: 60 * 60 })
+    }
+
+    return {
+      token: token,
     }
   }
 }
