@@ -82,4 +82,27 @@ export class AuthController {
       token: token,
     }
   }
+
+  @GrpcMethod('Auth')
+  validateRefreshToken(req: ValidateTokenReq): ValidateAccessTokenRes {
+    try {
+      let payload: Payload = jwt.verify(
+        req.token,
+        process.env.REFRESH_JWT_SECRET,
+      ) as Payload
+
+      return {
+        status: AuthStatus.AUTHENTICATED,
+        uid: payload.uid,
+      }
+    } catch (e) {
+      if (e instanceof jwt.TokenExpiredError)
+        return {
+          status: AuthStatus.EXPIRED,
+        }
+      return {
+        status: AuthStatus.UNAUTHENTICATED,
+      }
+    }
+  }
 }
